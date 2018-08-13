@@ -10,8 +10,12 @@ exports.gen = function () {
         // .script( 'admin.js' )
         // .template( 'admin.html' )
 
+    t.group( 'configuration' )
+        .dir( 'configuration/*' )
+
     t.group( 'metadata' )
         .dir( 'metadata/*' )
+
 
     // ==================================================================================
     // viewer agnostic libraries

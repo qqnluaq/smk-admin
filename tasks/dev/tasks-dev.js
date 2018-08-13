@@ -41,16 +41,16 @@ module.exports = function( grunt ) {
                 files: [
                     {
                         expand: true,
-                        cwd: '<%= srcPath %>/smk',
-                        src: [ '**' ],
-                        dest: '<%= buildPath %>/smk'
+                        cwd: '<%= srcPath %>',
+                        src: [ '**/*' ],
+                        dest: '<%= buildPath %>'
                     },
-                    {
-                        expand: true,
-                        cwd: '<%= srcPath %>/lib',
-                        src: [ '**' ],
-                        dest: '<%= buildPath %>/lib'
-                    },
+                    // {
+                    //     expand: true,
+                    //     cwd: '<%= srcPath %>/lib',
+                    //     src: [ '**' ],
+                    //     dest: '<%= buildPath %>/lib'
+                    // },
                 ]
             },
         },

@@ -1,6 +1,4 @@
 ( function () {
-
-// include.module( 'admin', [ 'admin.admin-html' ], function ( inc ) {
     "use strict"
 
     var store = new Vuex.Store( {
@@ -30,12 +28,14 @@
     } )
 
     // Vue.use( Vuex )
-
-    include( 'admin' ).then( function ( inc ) {
-        var vm = new Vue( {
+    window.SMK={}
+    include( 'admin', 'configuration' ).then( function ( inc ) {
+        window.SMK.vm = new Vue( {
             el: '#app',
-            store: store,
-            template: inc[ 'admin.admin-html' ]
+            // store: store,
+            template: inc[ 'admin.admin-html' ],
+            created: console.log,
+            mounted: console.log
         } )  
     } )
 
