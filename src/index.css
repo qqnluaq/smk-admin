@@ -1,0 +1,8 @@
+div#app {
+    display: flex;
+    flex-direction: row;
+}
+
+#app span {
+    flex-grow: 1;    
+}

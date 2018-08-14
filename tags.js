@@ -16,6 +16,8 @@ exports.gen = function () {
     t.group( 'metadata' )
         .dir( 'metadata/*' )
 
+    t.group( 'viewer' )
+        .dir( 'viewer/*' )
 
     // ==================================================================================
     // viewer agnostic libraries

@@ -1,10 +1,8 @@
-include.module( 'configuration', [ 'metadata', 'configuration.configuration-html' ], function ( inc ) {
+include.module( 'configuration', [ 'metadata', 'viewer', 'configuration.configuration-html' ], function ( inc ) {
     "use strict"
 
     Vue.component( 'admin-configuration', {
-        template: inc[ 'configuration.configuration-html' ],
-        created: console.log,
-        mounted: console.log
+        template: inc[ 'configuration.configuration-html' ]
     } )
     
 } )

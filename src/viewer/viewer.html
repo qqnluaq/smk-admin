@@ -1,0 +1,24 @@
+<div class="smka-viewer">
+    <h3>Viewer</h3>
+
+    <div><label>Viewer: <select v-model="type" >
+        <option value="leaflet">Leaflet</option>
+        <option value="esri3d">Esri3D</option>
+    </select></label></div>
+
+    <div><label>Base Map: <select v-model="baseMap" >
+        <option value="Topographic">Topographic</option>
+        <option value="Streets">Streets</option>
+        <option value="Imagery">Imagery</option>
+        <option value="Oceans">Oceans</option>
+        <option value="NationalGeographic">National Geographic</option>
+        <option value="ShadedRelief">Shaded Relief</option>
+        <option value="DarkGray">Dark Gray</option>
+        <option value="Gray">Gray</option>
+    </select></label></div>
+
+    <div class="viewer-map" 
+        v-map="{ baseMap: baseMap, center: center, zoom: zoom }"
+    ></div>
+
+</div>

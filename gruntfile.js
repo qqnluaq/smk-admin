@@ -161,7 +161,7 @@ module.exports = function( grunt ) {
                 '-W018': true, // confusing use of !
 
                 globals: {
-                    // SMK: true,
+                    ADMIN: true,
                     // $: true,
                     Vue: true,
                     Vuex: true,
