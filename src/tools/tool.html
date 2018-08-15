@@ -1,0 +1,12 @@
+<div class="smka-tool">
+    <div><label><input type="checkbox" v-model="enabled">{{ type }}</label></div>    
+
+    <div class="smka-detail" v-if="enabled">
+        <div><label>Title: <input type="text" v-model="title"></label></div>
+
+        <div><label>Position: <select v-model="position" >
+            <option value="toolbar">toolbar</option>
+            <option value="menu">menu</option>
+        </select></label></div>       
+    </div>
+</div>

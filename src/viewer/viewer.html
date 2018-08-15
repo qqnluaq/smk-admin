@@ -18,7 +18,8 @@
     </select></label></div>
 
     <div class="viewer-map" 
-        v-map="{ baseMap: baseMap, center: center, zoom: zoom }"
+        v-map="{ baseMap: baseMap, center: center, zoom: zoom, mapState: mapState }"
     ></div>
+        <!-- v-on:changed="setLocation" -->
 
 </div>

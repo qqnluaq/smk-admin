@@ -2,13 +2,13 @@ include.module( 'viewer', [ 'viewer.viewer-html' ], function ( inc ) {
     "use strict"
 
     Vue.directive( 'map', {
-        unbind: function ( el, binding ) {
-            console.log( 'unbind', binding )
+        unbind: function ( el, binding,vnode ) {
+            console.log( 'unbind', binding,vnode )
             binding.value.map.remove()
         },
 
-        inserted: function ( el, binding ) {
-            console.log( 'inserted', binding )
+        inserted: function ( el, binding,vnode ) {
+            console.log( 'inserted', binding,vnode )
 
             var map = L.map( el, {
                 attributionControl: false,
@@ -18,7 +18,7 @@ include.module( 'viewer', [ 'viewer.viewer-html' ], function ( inc ) {
                 // scrollWheelZoom: false,
                 zoom: 10
             } );
-            binding.value.map = map
+            binding.value.mapState.map = map
 
             map.addLayer( L.esri.basemapLayer( binding.value.baseMap, { detectRetina: true } ) )
 
@@ -26,58 +26,49 @@ include.module( 'viewer', [ 'viewer.viewer-html' ], function ( inc ) {
 
             map.panTo( [ binding.value.center[ 1 ], binding.value.center[ 0 ] ], { animate: false } )
 
-            // if ( binding.value.center ) {
-                // map.setView( smkPointLatLng( binding.value.center ), binding.value.zoom )
-            // }
+            map.on( 'zoomend', changedView )
+            map.on( 'moveend', changedView )
+            
+            function changedView() {
+                var b = map.getBounds()
+                var c = map.getCenter()
+
+                vnode.context.$store.commit( 'setLocation', {
+                    center: { latitude: c.lat, longitude: c.lng },
+                    zoom: map.getZoom(),
+                    extent: [ b.getWest(), b.getSouth(), b.getEast(), b.getNorth() ],
+                } )
+            }
 
             map.invalidateSize()
         },
 
-        update: function ( el, binding ) {
-            console.log( 'update', binding )
+        update: function ( el, binding,vnode ) {
+            console.log( 'update', binding,vnode )
 
-            var map = binding.value.map
+            var map = binding.value.mapState.map
 
-            // if ( binding.value.center ) {
-                // map.setView( smkPointLatLng( binding.value.center ), binding.value.zoom )
-                // map.invalidateSize();
-            // }
-        }
-    } )
-
-    var module = {
-        state: {
-            "type": "leaflet",
-            "location": {
-                "extent": [
-                    -140.22949218750003,
-                    59.998986120604464,
-                    -109.77539062500001,
-                    48.28319289548349
-                ],
-                "center": [
-                    -139.1782,
-                    47.6039
-                ],
-                "zoom": 5
-            },
-            "baseMap": "Streets",
-            "clusterOption": false
-        },
-        mutations: {
-            setType: function ( state, value ) {
-                state.type = value
-            },
-            setBaseMap: function ( state, value ) {
-                state.baseMap = value
+            if ( binding.oldValue.baseMap != binding.value.baseMap ) {
+                map.eachLayer( function ( ly ) { map.removeLayer( ly ) } )
+                map.addLayer( L.esri.basemapLayer( binding.value.baseMap, { detectRetina: true } ) )
             }
-        }
-    }
-
-    ADMIN.store.registerModule( 'viewer', module )
+        },
+    } )
 
     Vue.component( 'admin-viewer', {
         template: inc[ 'viewer.viewer-html' ],
+        data: function () {
+            return {
+                mapState: {}
+            }
+        },
+        methods: {
+            setLocation: function ( arg ) {
+                this.$store.commit( 'setLocation', arg )
+                console.log( arg )
+
+            }
+        },
         computed: {
             type: {
                 get: function () {
@@ -100,22 +91,35 @@ include.module( 'viewer', [ 'viewer.viewer-html' ], function ( inc ) {
             center: {
                 get: function () {
                     return this.$store.state.viewer.location.center
-                },
-                set: function ( value ) {
-                    // this.$store.commit( 'setBaseMap', value )
                 }
             },
 
             zoom: {
                 get: function () {
                     return this.$store.state.viewer.location.zoom
-                },
-                set: function ( value ) {
-                    // this.$store.commit( 'setBaseMap', value )
                 }
             },
         }
     } )
 
+    return {
+        initStoreConfig: function ( config ) {
+            Object.assign( config.mutations, {
+                setType: function ( state, value ) {
+                    state.viewer.type = value
+                    // state.type = value
+                },
+                
+                setBaseMap: function ( state, value ) {
+                    state.viewer.baseMap = value
+                },
 
+                setLocation: function ( state, value ) {
+                    state.viewer.location.extent = value.extent
+                    state.viewer.location.center = value.center
+                    state.viewer.location.zoom = value.zoom
+                }       
+            } )
+        }
+    }
 } )

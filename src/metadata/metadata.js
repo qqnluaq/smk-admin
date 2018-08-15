@@ -1,27 +1,12 @@
 include.module( 'metadata', [ 'metadata.metadata-html' ], function ( inc ) {
     "use strict"
 
-    var module = {
-        state: {
-            "name": "New Map",
-            "createdBy": "GIS Guy",
-            "published": false,
-        },
-        mutations: {
-            setName: function ( state, value ) {
-                state.name = value
-            },
-        }
-    }
-
-    ADMIN.store.registerModule( 'metadata', module )
-
     Vue.component( 'admin-metadata', {
         template: inc[ 'metadata.metadata-html' ],
         computed: {
             name: {
                 get: function () {
-                    return this.$store.state.metadata.name
+                    return this.$store.state.name
                 },
                 set: function ( value ) {
                     this.$store.commit( 'setName', value )
@@ -30,9 +15,19 @@ include.module( 'metadata', [ 'metadata.metadata-html' ], function ( inc ) {
 
             published: {
                 get: function () {
-                    return this.$store.state.metadata.published
+                    return this.$store.state.published
                 }
             },
         }
     } )
+
+    return {
+        initStoreConfig: function ( config ) {
+            Object.assign( config.mutations, {
+                setName: function ( state, value ) {
+                    state.name = value
+                }
+            } )
+        }
+    }
 } )
