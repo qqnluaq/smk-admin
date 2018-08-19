@@ -1,4 +1,9 @@
-include.module( 'tools', [ 'tools.tools-html', 'tools.tool-html', 'tools.tool-basemaps-html' ], function ( inc ) {
+include.module( 'tools', [ 
+    'tools.tools-html', 
+    'tools.tool-html', 
+    'tools.tool-basemaps-html',
+    'tools.tool-about-html'
+], function ( inc ) {
     "use strict"
 
     function toolId( t ) {
@@ -12,10 +17,6 @@ include.module( 'tools', [ 'tools.tools-html', 'tools.tool-html', 'tools.tool-ba
             throw "tool id " + id + " doesnt match unique tool"
         }
         return tools[ 0 ]
-    }
-
-    var toolBase = {
-
     }
 
     Vue.component( 'cfg-tool', {
@@ -48,7 +49,16 @@ include.module( 'tools', [ 'tools.tools-html', 'tools.tool-html', 'tools.tool-ba
         } )
     }
 
-    makeTool( 'about' )
+    makeTool( 'about', {
+        template: inc[ 'tools.tool-about-html' ],       
+        computed: {
+            content: {
+                get: function () { return toolById( this.$store.state, 'about' ).content },
+                set: function ( value ) { this.$store.commit( 'setToolProp', { id: 'about', prop: 'content', value: value } ) }
+            }
+        }
+    } )
+
     makeTool( 'baseMaps', {
         template: inc[ 'tools.tool-basemaps-html' ],       
         computed: {
@@ -58,6 +68,7 @@ include.module( 'tools', [ 'tools.tools-html', 'tools.tool-html', 'tools.tool-ba
             }
         }
     } )
+    
     makeTool( 'coordinate' )
     makeTool( 'directions' )
     makeTool( 'dropdown' )
