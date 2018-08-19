@@ -1,22 +1,16 @@
 include.module( 'metadata', [ 'metadata.metadata-html' ], function ( inc ) {
     "use strict"
 
-    Vue.component( 'admin-metadata', {
+    Vue.component( 'cfg-metadata', {
         template: inc[ 'metadata.metadata-html' ],
         computed: {
             name: {
-                get: function () {
-                    return this.$store.state.name
-                },
-                set: function ( value ) {
-                    this.$store.commit( 'setName', value )
-                }
+                get: function () { return this.$store.state.name },
+                set: function ( value ) { this.$store.commit( 'setName', value ) }
             },
 
             published: {
-                get: function () {
-                    return this.$store.state.published
-                }
+                get: function () { return this.$store.state.published }
             },
         }
     } )

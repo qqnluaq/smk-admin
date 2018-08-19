@@ -5,11 +5,6 @@ exports.gen = function () {
 
     var t = new tg.TagSet()
 
-    t.group( 'admin' )
-        .dir( 'admin/*' )
-        // .script( 'admin.js' )
-        // .template( 'admin.html' )
-
     t.group( 'configuration' )
         .dir( 'configuration/*' )
 

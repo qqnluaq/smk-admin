@@ -3,12 +3,12 @@ include.module( 'viewer', [ 'viewer.viewer-html' ], function ( inc ) {
 
     Vue.directive( 'map', {
         unbind: function ( el, binding,vnode ) {
-            console.log( 'unbind', binding,vnode )
-            binding.value.map.remove()
+            // console.log( 'unbind', binding,vnode )
+            binding.value.mapState.map.remove()
         },
 
         inserted: function ( el, binding,vnode ) {
-            console.log( 'inserted', binding,vnode )
+            // console.log( 'inserted', binding,vnode )
 
             var map = L.map( el, {
                 attributionControl: false,
@@ -21,9 +21,7 @@ include.module( 'viewer', [ 'viewer.viewer-html' ], function ( inc ) {
             binding.value.mapState.map = map
 
             map.addLayer( L.esri.basemapLayer( binding.value.baseMap, { detectRetina: true } ) )
-
             map.setZoom( binding.value.zoom, { animate: false } )
-
             map.panTo( [ binding.value.center[ 1 ], binding.value.center[ 0 ] ], { animate: false } )
 
             map.on( 'zoomend', changedView )
@@ -44,7 +42,7 @@ include.module( 'viewer', [ 'viewer.viewer-html' ], function ( inc ) {
         },
 
         update: function ( el, binding,vnode ) {
-            console.log( 'update', binding,vnode )
+            // console.log( 'update', binding,vnode )
 
             var map = binding.value.mapState.map
 
@@ -55,49 +53,30 @@ include.module( 'viewer', [ 'viewer.viewer-html' ], function ( inc ) {
         },
     } )
 
-    Vue.component( 'admin-viewer', {
+    Vue.component( 'cfg-viewer', {
         template: inc[ 'viewer.viewer-html' ],
         data: function () {
             return {
                 mapState: {}
             }
         },
-        methods: {
-            setLocation: function ( arg ) {
-                this.$store.commit( 'setLocation', arg )
-                console.log( arg )
-
-            }
-        },
         computed: {
             type: {
-                get: function () {
-                    return this.$store.state.viewer.type
-                },
-                set: function ( value ) {
-                    this.$store.commit( 'setType', value )
-                }
+                get: function () { return this.$store.state.viewer.type },
+                set: function ( value ) { this.$store.commit( 'setType', value ) }
             },
 
             baseMap: {
-                get: function () {
-                    return this.$store.state.viewer.baseMap
-                },
-                set: function ( value ) {
-                    this.$store.commit( 'setBaseMap', value )
-                }
+                get: function () { return this.$store.state.viewer.baseMap },
+                set: function ( value ) { this.$store.commit( 'setBaseMap', value ) }
             },
 
             center: {
-                get: function () {
-                    return this.$store.state.viewer.location.center
-                }
+                get: function () { return this.$store.state.viewer.location.center }
             },
 
             zoom: {
-                get: function () {
-                    return this.$store.state.viewer.location.zoom
-                }
+                get: function () { return this.$store.state.viewer.location.zoom }
             },
         }
     } )
@@ -107,7 +86,6 @@ include.module( 'viewer', [ 'viewer.viewer-html' ], function ( inc ) {
             Object.assign( config.mutations, {
                 setType: function ( state, value ) {
                     state.viewer.type = value
-                    // state.type = value
                 },
                 
                 setBaseMap: function ( state, value ) {

@@ -1,7 +1,7 @@
 include.module( 'configuration', [ 'metadata', 'viewer', 'tools', 'configuration.configuration-html' ], function ( inc ) {
     "use strict"
 
-    Vue.component( 'admin-configuration', {
+    Vue.component( 'smk-configuration', {
         template: inc[ 'configuration.configuration-html' ]
     } )
 

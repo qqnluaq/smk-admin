@@ -1,4 +1,4 @@
-include( 'admin', 'configuration' ).then( function ( inc ) {
+include( /*'admin',*/ 'configuration' ).then( function ( inc ) {
     "use strict"
 
     var storeConfig = {
