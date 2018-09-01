@@ -1,8 +1,13 @@
 include.module( 'tools', [ 
     'tools.tools-html', 
     'tools.tool-html', 
+    'tools.tool-about-html',
     'tools.tool-basemaps-html',
-    'tools.tool-about-html'
+    'tools.tool-identify-html',
+    'tools.tool-scale-html',
+    'tools.tool-select-html',
+    'tools.tool-zoom-html',
+    'styleTag'
 ], function ( inc ) {
     "use strict"
 
@@ -19,6 +24,17 @@ include.module( 'tools', [
         return tools[ 0 ]
     }
 
+    function makeToolPropAccessor( prop ) {
+        return {
+            get: function () { 
+                return toolById( this.$store.state, this.id )[ prop ]
+            },
+            set: function ( value ) { 
+                this.$store.commit( 'setToolProp', { id: this.id, prop: prop, value: value } ) 
+            }
+        }
+    }
+
     Vue.component( 'cfg-tool', {
         template: inc[ 'tools.tool-html' ],
         props: [ 'id' ],
@@ -26,53 +42,49 @@ include.module( 'tools', [
             type: {
                 get: function () { return toolById( this.$store.state, this.id ).type }
             },
-            title: {
-                get: function () { return toolById( this.$store.state, this.id ).title },
-                set: function ( value ) { this.$store.commit( 'setToolProp', { id: this.id, prop: 'title', value: value } ) }
-            },
-            position: {
-                get: function () { return toolById( this.$store.state, this.id ).position }
-            },
-            enabled: {
-                get: function () { return toolById( this.$store.state, this.id ).enabled },
-                set: function ( value ) { this.$store.commit( 'setToolProp', { id: this.id, prop: 'enabled', value: value } ) }
-            }
+            title: makeToolPropAccessor( 'title' ),
+            position:  makeToolPropAccessor( 'position' ),
+            enabled: makeToolPropAccessor( 'enabled' ),
         }
     } )
 
-    function makeTool( id, mixin ) {
-        if ( !mixin ) mixin = {
-            template: '<div class="smka-tool-' + id + '"><cfg-tool id="' + id + '"></cfg-tool></div>'
-        }
-        Vue.component( 'cfg-tool-' + id, {
-            mixins: [ mixin ]
-        } )
+    function makeTool( id, option ) {
+        if ( option && option.computed )
+            option.computed.id = { get: function () { return id } }
+
+        Vue.component( 'cfg-tool-' + id, Object.assign( {
+            template: '\
+                <div class="smka-tool-' + id + '">\
+                    <cfg-tool id="' + id + '"></cfg-tool>\
+                </div>\
+            '
+        }, option ) )
     }
 
     makeTool( 'about', {
         template: inc[ 'tools.tool-about-html' ],       
         computed: {
-            content: {
-                get: function () { return toolById( this.$store.state, 'about' ).content },
-                set: function ( value ) { this.$store.commit( 'setToolProp', { id: 'about', prop: 'content', value: value } ) }
-            }
+            content: makeToolPropAccessor( 'content' )
         }
     } )
 
     makeTool( 'baseMaps', {
         template: inc[ 'tools.tool-basemaps-html' ],       
         computed: {
-            choices: {
-                get: function () { return toolById( this.$store.state, 'baseMaps' ).choices },
-                set: function ( value ) { this.$store.commit( 'setToolProp', { id: 'baseMaps', prop: 'choices', value: value } ) }
-            }
+            choices: makeToolPropAccessor( 'choices' )
         }
     } )
     
     makeTool( 'coordinate' )
     makeTool( 'directions' )
     makeTool( 'dropdown' )
-    makeTool( 'identify' )
+    makeTool( 'identify', {
+        template: inc[ 'tools.tool-identify-html' ],       
+        computed: {
+            styleConfig: makeToolPropAccessor( 'style' ),
+        }
+    } )
+
     makeTool( 'layers' )
     makeTool( 'location' )
     makeTool( 'markup' )
@@ -80,11 +92,32 @@ include.module( 'tools', [
     makeTool( 'menu' )
     makeTool( 'minimap' )
     makeTool( 'pan' )
-    makeTool( 'scale' )
+
+    makeTool( 'scale', {
+        template: inc[ 'tools.tool-scale-html' ],       
+        computed: {
+            showFactor: makeToolPropAccessor( 'showFactor' ),
+            showBar: makeToolPropAccessor( 'showBar' ),
+        }
+    } )
+
     makeTool( 'search' )
-    makeTool( 'select' )
+    makeTool( 'select', {
+        template: inc[ 'tools.tool-select-html' ],       
+        computed: {
+            styleConfig: makeToolPropAccessor( 'style' ),
+        }
+    } )
     makeTool( 'version' )
-    makeTool( 'zoom' )
+    makeTool( 'zoom', {
+        template: inc[ 'tools.tool-zoom-html' ],       
+        computed: {
+            mouseWheel: makeToolPropAccessor( 'mouseWheel' ),
+            doubleClick: makeToolPropAccessor( 'doubleClick' ),
+            box: makeToolPropAccessor( 'box' ),
+            control: makeToolPropAccessor( 'control' ),        
+        }
+    } )
 
     // Vue.component( 'cfg-tool-pan', {
     //     extends: Vue.component( 'cfg-tool' ),

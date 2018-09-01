@@ -14,6 +14,8 @@ exports.gen = function () {
     t.group( 'viewer' )
         .dir( 'viewer/*' )
 
+    t.group( 'styleTag' )
+        .dir( 'style/*' )
 
     t.group( 'tools' )
         .dir( 'tools/*' )
