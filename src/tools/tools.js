@@ -82,6 +82,32 @@ include.module( 'tools', [
         template: inc[ 'tools.tool-identify-html' ],       
         computed: {
             styleConfig: makeToolPropAccessor( 'style' ),
+            hasStyle: {
+                get: function () { return !!toolById( this.$store.state, this.id ).style },
+                set: function ( value ) {
+                    var style
+                    if ( value )
+                        style = {
+                            "strokeWidth": 1,
+                            // "strokeStyle": "1, 1",
+                            // "strokeColor": "#000000",
+                            // "strokeOpacity": 0.8,
+                            // "fillColor": "#000000",
+                            // "fillOpacity": 0.5,
+                            // "markerSize": [
+                            //     20,
+                            //     20
+                            // ],
+                            // "markerOffset": [
+                            //     10,
+                            //     0
+                            // ]
+                        }
+                    else 
+                        style = null
+                    this.$store.commit( 'setToolProp', { id: this.id, prop: 'style', value: style } ) 
+                }
+            }
         }
     } )
 
